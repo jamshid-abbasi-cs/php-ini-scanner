@@ -1,20 +1,54 @@
 #!/usr/bin/env php
 <?php
 
+/*
+ * Name: PHP Ini Scanner
+ * Description: A lightweight CLI tool to audit php.ini configurations against development and production standards.
+ * Version: 1.0.0.1
+ * Locale: en_International
+ * Last update: 2025
+ * Architecture: no-arch
+ * API: 7.4
+ * Executor: CLI
+ * Builder:
+ * License: GPL-3.0
+ * Copyright: Copyright (c) 2025 Yousha Aleayoub.
+ * Producer: Yousha Aleayoub
+ * Maintainer: Yousha Aleayoub
+ * Contact: yousha.a@hotmail.com
+ * Link: http://yousha.blog.ir
+ */
+
 declare(strict_types=1);
 
-if (!file_exists(__DIR__ . '/../vendor/autoload.php')) {
-    fwrite(STDERR, 'Please run "composer install" first.' . PHP_EOL);
+error_reporting(E_ALL);
+ini_set('display_errors', '1');
+ini_set('display_startup_errors', '1');
+
+if (PHP_SAPI !== 'cli') {
+    fwrite(STDERR, "Error: This script can only be run from terminal.\n");
     exit(1);
 }
 
-require __DIR__ . '/../vendor/autoload.php';
+$autoloadPath = __DIR__ . '/../../../../vendor/autoload.php'; // Path for Composer-installed package as user.
+
+if (!file_exists($autoloadPath)) {
+    $autoloadPath = __DIR__ . '/../vendor/autoload.php'; // Path for local development.
+}
+
+if (!file_exists($autoloadPath)) {
+    fwrite(STDERR, "Error: Vendor autoload file not found. Run 'composer install'.\n");
+    exit(1);
+}
+
+require_once $autoloadPath;
 
 use Yousha\PhpIniScanner\Commands\ScanCommand;
 use Symfony\Component\Console\Application;
 
-$application = new Application('PHP INI Scanner', '1.0.0');
+$application = new Application('PHP INI Scanner', '1.0.0.1');
 $application->add(new ScanCommand());
+$application->setDefaultCommand('scan', false);
 
 try {
     $application->run();
