@@ -42,12 +42,26 @@ php ./vendor/bin/php-ini-scanner scan -p -i /path/to/php.ini
 
 ```
 
+Or to scan current installed PHP:
+
+```bash
+php ./vendor/bin/php-ini-scanner scan -p
+
+```
+
 ### Scan for Development
 
 Checks for debugging-friendly settings:
 
 ```bash
 php ./vendor/bin/php-ini-scanner scan -d -i /path/to/php.ini
+
+```
+
+Or to scan current installed PHP:
+
+```bash
+php ./vendor/bin/php-ini-scanner scan -d
 
 ```
 
