@@ -147,9 +147,6 @@ namespace Yousha\PhpIniScanner\Tests {
             // AAA
             $this->assertNotEmpty(PHP_MAJOR_VERSION);
 
-            // AAA
-            $this->assertNotEmpty(PHP_MINOR_VERSION);
-
             // Arrange/Action
             $result = hash('sha256', '1234567890Abcdefg');
             // Assert

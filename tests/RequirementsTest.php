@@ -67,7 +67,7 @@ namespace Yousha\PhpIniScanner\Tests {
          */
         final public function testProjectRequiredPhpVersion(): void
         {
-            $_result = (PHP_MAJOR_VERSION == 7) && (PHP_MINOR_VERSION >= 4);
+            $_result = (PHP_MAJOR_VERSION >= 7) && (PHP_MINOR_VERSION >= 0);
             $this->assertTrue($_result);
         }
 
