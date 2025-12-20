@@ -1,0 +1,24 @@
+#!/usr/bin/env php
+<?php
+
+declare(strict_types=1);
+
+if (!file_exists(__DIR__ . '/../vendor/autoload.php')) {
+    fwrite(STDERR, 'Please run "composer install" first.' . PHP_EOL);
+    exit(1);
+}
+
+require __DIR__ . '/../vendor/autoload.php';
+
+use Yousha\PhpIniScanner\Commands\ScanCommand;
+use Symfony\Component\Console\Application;
+
+$application = new Application('PHP INI Scanner', '1.0.0');
+$application->add(new ScanCommand());
+
+try {
+    $application->run();
+} catch (Exception $e) {
+    fwrite(STDERR, 'Error: ' . $e->getMessage() . PHP_EOL);
+    exit(1);
+}
