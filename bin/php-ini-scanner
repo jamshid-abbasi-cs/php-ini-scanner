@@ -4,7 +4,7 @@
 /*
  * Name: PHP Ini Scanner
  * Description: A lightweight CLI tool to audit php.ini configurations against development and production standards.
- * Version: 1.0.0.1
+ * Version: 1.0.3.3
  * Locale: en_International
  * Last update: 2025
  * Architecture: no-arch
@@ -46,7 +46,7 @@ require_once $autoloadPath;
 use Yousha\PhpIniScanner\Commands\ScanCommand;
 use Symfony\Component\Console\Application;
 
-$application = new Application('PHP INI Scanner', '1.0.0.1');
+$application = new Application('PHP INI Scanner', '1.0.3.3');
 $application->add(new ScanCommand());
 $application->setDefaultCommand('scan', false);
 
