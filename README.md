@@ -2,7 +2,7 @@
 
 A lightweight CLI tool to audit php.ini configurations against development and production standards.
 
-[![current version](https://img.shields.io/packagist/v/yousha/php-ini-scanner.svg)](https://packagist.org/packages/yousha/php-ini-scanner) [![PHP](https://img.shields.io/badge/PHP-7.4-617CBE)](https://php.net/) [![issues](https://img.shields.io/github/issues/yousha/php-ini-scanner)](https://github.com/yousha/php-ini-scanner/issues) ![repo size](https://img.shields.io/github/repo-size/yousha/php-ini-scanner) [![GitHub license](https://img.shields.io/github/license/yousha/php-ini-scanner)](LICENSE)
+[![current version](https://img.shields.io/packagist/v/yousha/php-ini-scanner.svg)](https://packagist.org/packages/yousha/php-ini-scanner) [![PHP](https://img.shields.io/badge/PHP-7.4-617CBE)](https://php.net/) [![PHP](https://img.shields.io/badge/PHP-8.5-617CBE)](https://php.net/) [![issues](https://img.shields.io/github/issues/yousha/php-ini-scanner)](https://github.com/yousha/php-ini-scanner/issues) ![repo size](https://img.shields.io/github/repo-size/yousha/php-ini-scanner) [![GitHub license](https://img.shields.io/github/license/yousha/php-ini-scanner)](LICENSE)
 
 It compares given settings against industry-standard recommendations for either **Development** or **Production** environments.
 
