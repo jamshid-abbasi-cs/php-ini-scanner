@@ -26,8 +26,12 @@ final class ProductionRules implements RuleSetInterface
     public function getRules(): array
     {
         $rules = [
-            // --- Core Error Handling ---
-            'error_reporting' => (string) E_ALL, // Error engine.
+            // --- Core ---
+            'engine' => 'On',
+            'short_open_tag' => 'Off',
+
+            // --- Error Handling ---
+            'error_reporting' => 'E_ALL', // Error engine.
             'display_errors' => 'Off',
             'log_errors' => 'On',
             'display_startup_errors' => 'Off',
@@ -35,16 +39,17 @@ final class ProductionRules implements RuleSetInterface
             'zend.exception_ignore_args' => 'On', // Crucial for security.
 
             // --- Resources ---
-            'memory_limit' => '512M', // Restrictive default.
+            'memory_limit' => '256M', // Restrictive default.
             'max_execution_time' => '30',
             'max_input_time' => '60',
             'post_max_size' => '16M',
             'max_input_vars' => '1024', // DoS protection.
 
             // --- Session ---
-            'session.cookie_secure' => '1',
-            'session.cookie_httponly' => '1',
-            'session.use_strict_mode' => '1',
+            'session.cookie_secure' => 'On',
+            'session.cookie_httponly' => 'On',
+            'session.use_strict_mode' => 'On',
+            'session.use_trans_sid' => 'Off', // Security risk.
 
             // --- Information Disclosure ---
             'expose_php' => 'Off', // Security risk.
@@ -53,32 +58,46 @@ final class ProductionRules implements RuleSetInterface
             // --- File/Network ---
             'allow_url_fopen' => 'Off', // Security risk.
             'allow_url_include' => 'Off', // Security risk.
+            'cgi.fix_pathinfo' => 'Off', // Security risk.
             'mysqli.allow_local_infile' => 'Off', // Security risk. Prevent arbitrary file reads via SQL.
 
             // --- Performance ---
-            'opcache.enable' => '1',
+            'opcache.enable' => 'On',
             'opcache.log_verbosity_level' => '2',
-            'opcache.validate_timestamps' => '1',
+            'opcache.validate_timestamps' => 'On',
+            'zlib.output_compression' => 'On',
 
             // --- Other ---
-            'fastcgi.logging' => '0',
+            'fastcgi.logging' => 'Off',
+            'enable_dl' => 'Off',
             'date.timezone' => 'UTC',
         ];
 
-        // PHP 8.0+ JIT.
+        if (PHP_VERSION_ID >= 80000 && PHP_VERSION_ID <= 80400) {
+            $rules['opcache.jit'] = 'disable';
+        }
+
         if (PHP_VERSION_ID >= 80000) {
-            $rules['opcache.jit'] = 'tracing';
+            $rules['opcache.record_warnings'] = 'On';
             $rules['opcache.jit_buffer_size'] = '128M'; // Need buffer for JIT to work.
+            $rules['zend.exception_string_param_max_len'] = '0'; // Unlimited.
         }
 
-        // PHP 8.2+ Log Permissions.
+        if (PHP_VERSION_ID >= 80100) {
+            $rules['opcache.interned_strings_buffer'] = '16'; // Increased from default
+        }
+
+        // Log permissions.
         if (PHP_VERSION_ID >= 80200) {
-            $rules['error_log_mode'] = '0600'; // Owner rw only.
+            $rules['error_log_mode'] = '0600'; // Owner RW only.
         }
 
-        // PHP 8.3+
         if (PHP_VERSION_ID >= 80300) {
-            $rules['opcache.record_warnings'] = '0';
+            $rules['session.sid_length'] = '48';
+        }
+
+        if (PHP_VERSION_ID <= 80400) {
+            $rules['report_memleaks'] = 'On';
         }
 
         return $rules;

@@ -26,14 +26,17 @@ final class DevelopmentRules implements RuleSetInterface
     public function getRules(): array
     {
         $rules = [
-            // --- Core Error Handling ---
-            'error_reporting' => (string) E_ALL, // Error engine.
+            // --- Core ---
+            'engine' => 'On',
+            'short_open_tag' => 'Off',
+
+            // --- Error Handling ---
+            'error_reporting' => 'E_ALL', // Error engine.
             'display_errors' => 'On',
             'log_errors' => 'On',
             'display_startup_errors' => 'On',
             'html_errors' => 'Off',
             'zend.exception_ignore_args' => 'Off',
-            'report_memleaks' => 'On',
 
             // --- Resources ---
             'memory_limit' => '128M', // Generous for dev.
@@ -43,42 +46,52 @@ final class DevelopmentRules implements RuleSetInterface
             'max_input_vars' => '1024', // DoS protection.
 
             // --- Session ---
-            'session.cookie_secure' => '0', // Often no HTTPS on localhost.
-            'session.cookie_httponly' => '1',
-            'session.use_strict_mode' => '1',
+            'session.cookie_secure' => 'Off', // Often no HTTPS on localhost.
+            'session.cookie_httponly' => 'On',
+            'session.use_strict_mode' => 'On',
+            'session.use_trans_sid' => 'Off', // Security risk.
 
             // --- Information Disclosure ---
             'expose_php' => 'On', // Useful to see version in dev.
             'mail.add_x_header' => 'On', // Useful to debug in dev.
 
             // --- File/Network ---
-            'allow_url_fopen' => '0', // To match with production envs.
-            'allow_url_include' => '0', // To match with production envs.
+            'allow_url_fopen' => 'Off', // To match with production envs.
+            'allow_url_include' => 'Off', // To match with production envs.
+            'cgi.fix_pathinfo' => 'Off', // Security risk.
             'mysqli.allow_local_infile' => 'Off', // Security risk. Prevent arbitrary file reads via SQL.
 
             // --- Performance ---
-            'opcache.enable' => '0', // Disable caching for hot reloading.
-            'opcache.enable_cli' => '0',
+            'opcache.enable' => 'Off', // Disable caching for hot reloading.
+            'opcache.enable_cli' => 'Off',
             'opcache.log_verbosity_level' => '2',
 
             // --- Other ---
-            'fastcgi.logging' => '1',
+            'fastcgi.logging' => 'On',
+            'enable_dl' => 'Off',
             'date.timezone' => 'UTC',
         ];
 
-        // PHP 8.0+
-        if (PHP_VERSION_ID >= 80000) {
+        if (PHP_VERSION_ID >= 80000 && PHP_VERSION_ID <= 80400) {
             $rules['opcache.jit'] = 'disable';
         }
 
-        // PHP 8.2+ log permissions.
-        if (PHP_VERSION_ID >= 80200) {
-            $rules['error_log_mode'] = '0600'; // Owner rw only.
+        if (PHP_VERSION_ID >= 80000) {
+            $rules['opcache.record_warnings'] = 'Off';
+            $rules['zend.exception_string_param_max_len'] = '15';
         }
 
-        // PHP 8.3+
-        if (PHP_VERSION_ID >= 80300) {
-            $rules['opcache.record_warnings'] = '1';
+        // Log permissions.
+        if (PHP_VERSION_ID >= 80200) {
+            $rules['error_log_mode'] = '0600'; // Owner RW only.
+        }
+
+        if (PHP_VERSION_ID <= 80300) {
+            $rules['session.sid_length'] = '48';
+        }
+
+        if (PHP_VERSION_ID <= 80400) {
+            $rules['report_memleaks'] = 'On';
         }
 
         return $rules;
