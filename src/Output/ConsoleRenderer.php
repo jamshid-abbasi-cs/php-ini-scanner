@@ -20,7 +20,8 @@ final class ConsoleRenderer
     {
         $output->writeln(['', "<info>Scan result of php.ini for <comment>{$mode}</comment> environment...</info>", '']);
         $table = new Table($output);
-        $table->setHeaders(['Configuration', 'Expected', 'Current', 'Status']);
+        $table->setFooterTitle($mode);
+        $table->setHeaders(['Configuration', 'Current', 'Expected', 'Status']);
         $passCount = 0;
 
         foreach ($results as $row) {
@@ -31,8 +32,8 @@ final class ConsoleRenderer
 
             $table->addRow([
                 $row['setting'],
+                $row['current'],
                 $row['expected'],
-                $row['current'], // Now displays "0" or "1" accurately.
                 $status,
             ]);
         }
@@ -41,5 +42,6 @@ final class ConsoleRenderer
         $total = count($results);
         $failed = $total - $passCount;
         $output->writeln(['', "Checked: {$total} | Passed: <info>{$passCount}</info> | Failed: <error>{$failed}</error>", '']);
+        $output->writeln('<info>Hint: It is recommended to use On/Off values instead of 0/1 or yes/no in your php.ini files.</info>');
     }
 }

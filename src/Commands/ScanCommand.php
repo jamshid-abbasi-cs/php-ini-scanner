@@ -53,19 +53,19 @@ final class ScanCommand extends Command
     {
         $isDev = $input->getOption('development');
         $isProd = $input->getOption('production');
-        $iniPath = $input->getOption('ini-path');
+        $phpIniPath = $input->getOption('ini-path');
 
         if (!$isDev && !$isProd) {
             $output->writeln('<error>Error: You must specify a mode: -d or -p</error>');
             return Command::FAILURE;
         }
 
-        if (!$iniPath) {
-            $iniPath = php_ini_loaded_file();
-            $output->writeln("<comment>No path provided. Detecting system file: {$iniPath}</comment>");
+        if (!$phpIniPath) {
+            $phpIniPath = php_ini_loaded_file();
+            $output->writeln("<comment>No php.ini provided. Detecting system's default: {$phpIniPath}</comment>");
         }
 
-        if (!$iniPath || !file_exists($iniPath)) {
+        if (!$phpIniPath || !file_exists($phpIniPath)) {
             $output->writeln("<error>Error: Valid ini file path required via --ini-path or -i</error>");
             return Command::FAILURE;
         }
@@ -73,7 +73,7 @@ final class ScanCommand extends Command
         $rules = $isProd ? new ProductionRules() : new DevelopmentRules();
 
         try {
-            $results = $this->scanner->scanFile($iniPath, $rules);
+            $results = $this->scanner->scanFile($phpIniPath, $rules);
             $this->renderer->render($output, $results, $rules->getName());
         } catch (\Exception $exception) {
             $output->writeln('<error>Error: ' . $exception->getMessage() . '</error>');

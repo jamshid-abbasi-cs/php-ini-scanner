@@ -87,7 +87,7 @@ final class ScannerEngineTest extends TestCase
         foreach ($results as $res) {
             if ($res['setting'] === 'display_errors') {
                 $this->assertTrue($res['pass'], 'display_errors=Off should pass ProductionRules');
-                $this->assertEquals('0', $res['current']);
+                $this->assertEquals('off', $res['current']);
             }
         }
     }
@@ -110,7 +110,7 @@ final class ScannerEngineTest extends TestCase
         foreach ($results as $res) {
             if ($res['setting'] === 'display_errors') {
                 $this->assertFalse($res['pass'], 'display_errors=On should fail ProductionRules');
-                $this->assertEquals('1', $res['current']);
+                $this->assertEquals('on', $res['current']);
             }
         }
     }
@@ -130,11 +130,11 @@ final class ScannerEngineTest extends TestCase
 
         foreach ($results as $res) {
             if ($res['setting'] === 'html_errors') {
-                $this->assertEquals('0', $res['current']);
+                $this->assertEquals('off', $res['current']);
             }
 
             if ($res['setting'] === 'allow_url_fopen') {
-                $this->assertEquals('1', $res['current']);
+                $this->assertEquals('on', $res['current']);
             }
         }
     }
